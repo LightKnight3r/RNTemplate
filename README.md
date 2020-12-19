@@ -1,4 +1,4 @@
-# SanShip
+# RNTemplate
 
 Ứng dụng cho nền tảng android và iOS. Sử dụng framework [React Native](https://facebook.github.io/react-native/).
 
@@ -14,9 +14,8 @@ Hỗ trợ android 4.1 và iOS 7.0 trở lên (điều kiện của framework Re
 
 ## Releases
 * Android
-  * Native : 
-  * Hybrid : 
+  * Native :
+  * Hybrid :
 * iOS
 
 ## Author
-
