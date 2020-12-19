@@ -1,0 +1,4 @@
+react-native bundle --entry-file src/index.ios.js --bundle-output main.jsbundle --platform 'ios'  --dev false
+zip -r bundle.zip main.jsbundle assets
+rm main.jsbundle
+rm main.jsbundle.meta

@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">RNTemplate</string>
+    <string name="fb_app_id">1913555415398264</string>
+    <string name="ak_client_token">16f77e06e966e5958d8bc7ffadfac772</string>
+    <string name="fb_login_protocol_scheme">fb1913555415398264</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">tHXXJJDnSRPvLb7CZFk3cHCEKgfp0MnYdcMdm</string>
+</resources>

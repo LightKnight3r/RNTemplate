@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">RNTemplate</string>
+
+    <string name="account_type">com.sanship.account</string>
+    <string name="content_authority">com.sanship.authority</string>
+
+    <string name="update_server">https://api.heyu.asia/api/v1.0/app/get-lastest-update</string>
+    <string name="update_server_token">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaEBjb21wYXJlNTIuY29tIiwicGFzc3dvcmQiOiJzaGVlcDEyMzQ1NiIsImlhdCI6MTQ3NDg1NTM5Nn0.KQdfmvxl96SrPsQpy1_J_gkGOZkoVQvGA1FZ6RK1_BE</string>
+    <string name="update_server_static">https://api.heyu.asia</string>
+    <string name="facebook_app_id">1913555415398264</string>
+    <string name="ak_client_token">16f77e06e966e5958d8bc7ffadfac772</string>
+    <string name="fb_login_protocol_scheme">fb1913555415398264</string>
+    <string name="gg_android_browser_key">AIzaSyCcm1-tm594tu_GAMv_9uk6OznoyMGpWSc</string>
+    <string name="gg_android_key">AIzaSyDv7k0i13euDi8VBhsBSXy2TT-A7g0xBRg</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">fB_u4fOwUq3CBly0kZeVQk_Y1NjLp0yzwufgI</string>
+</resources>
