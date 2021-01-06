@@ -1,12 +1,3 @@
-/**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
- */
-
 #import "AppDelegate.h"
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
@@ -21,16 +12,39 @@
 #import "RNBootSplash.h"
 //@import GoogleMaps;
 
+#if DEBUG
+#import <FlipperKit/FlipperClient.h>
+#import <FlipperKitLayoutPlugin/FlipperKitLayoutPlugin.h>
+#import <FlipperKitUserDefaultsPlugin/FKUserDefaultsPlugin.h>
+#import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
+#import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
+#import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+
+static void InitializeFlipper(UIApplication *application) {
+  FlipperClient *client = [FlipperClient sharedClient];
+  SKDescriptorMapper *layoutDescriptorMapper = [[SKDescriptorMapper alloc] initWithDefaults];
+  [client addPlugin:[[FlipperKitLayoutPlugin alloc] initWithRootNode:application withDescriptorMapper:layoutDescriptorMapper]];
+  [client addPlugin:[[FKUserDefaultsPlugin alloc] initWithSuiteName:nil]];
+  [client addPlugin:[FlipperKitReactPlugin new]];
+  [client addPlugin:[[FlipperKitNetworkPlugin alloc] initWithNetworkAdapter:[SKIOSNetworkAdapter new]]];
+  [client start];
+}
+#endif
+
 @implementation AppDelegate
 NSDictionary* initialLaunchOptions;
 //UIAlertView* alertView = nil;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  #if DEBUG
+	  InitializeFlipper(application);
+	#endif
+
   if ([FIRApp defaultApp] == nil) {
     [FIRApp configure];
   }
-  
+
 //  [GMSServices provideAPIKey:@"AIzaSyBIidO3qxiwdjdX_GT1fLRvfGM8E8D4WIc"];
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -128,7 +142,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
     viewSize = CGSizeMake(viewSize.height, viewSize.width);
     viewOrientation = @"Landscape";
   }
-  
+
   NSArray* imagesDict = [[[NSBundle mainBundle] infoDictionary] valueForKey:@"UILaunchImages"];
   for (NSDictionary* dict in imagesDict) {
     CGSize imageSize = CGSizeFromString(dict[@"UILaunchImageSize"]);
@@ -148,7 +162,7 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
   } else {
     image = [[UIColor alloc] initWithRed:27.0/255.0f green:27.0/255.0f blue:27.0/255.0f alpha: 1.0f];
   }
-  
+
   return image;
 }
 
@@ -180,10 +194,10 @@ continueUserActivity:(NSUserActivity *)userActivity
 - (void)pushRegistry:(PKPushRegistry *)registry didReceiveIncomingPushWithPayload:(PKPushPayload *)payload forType:(NSString *)type {
   // Process the received push
   [RNVoipPushNotificationManager didReceiveIncomingPushWithPayload:payload forType:(NSString *)type];
-  
+
   NSString *uuid = [payload.dictionaryPayload valueForKeyPath:@"extras.roomId"];
   NSString *handle = payload.dictionaryPayload[@"phone"];
-  
+
 //  [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:false localizedCallerName: nil fromPushKit: YES payload:nil];
 
 }
