@@ -40,7 +40,7 @@ import SideMenu from 'react-native-side-menu';
 import {Scene, Reducer, Router, Switch, TabBar, Modal, Schema, Actions} from 'react-native-router-flux'
 const RouterWithRedux = connect()(Router);
 // var Orientation = require('react-native-orientation');
-import messaging from '@react-native-firebase/messaging';
+// import messaging from '@react-native-firebase/messaging';
 var SensorManager = NativeModules.SensorManager;
 var Spinner = require('react-native-spinkit');
 var StatusBarAndroid = require('react-native-android-statusbar');
@@ -562,21 +562,21 @@ var App = createReactClass({
 
     AnalyticsManager.init();
 
-    if(Platform.OS === 'ios') {
-      dispatch(AppStateActions_MiddleWare.getApiKeyGoogle())
-        .then((result) => {
-          UtilNative.setApiKeyGoogleMap(result.res.data.apiKey)
-          self.setState({
-            hasSetApiGoogleMap: true
-          });
-        })
-        .catch((err) => {
-          UtilNative.setApiKeyGoogleMap(Define.constants.apiKeyGoogleMap)
-          self.setState({
-            hasSetApiGoogleMap: true
-          });
-        });
-    }
+    // if(Platform.OS === 'ios') {
+    //   dispatch(AppStateActions_MiddleWare.getApiKeyGoogle())
+    //     .then((result) => {
+    //       UtilNative.setApiKeyGoogleMap(result.res.data.apiKey)
+    //       self.setState({
+    //         hasSetApiGoogleMap: true
+    //       });
+    //     })
+    //     .catch((err) => {
+    //       UtilNative.setApiKeyGoogleMap(Define.constants.apiKeyGoogleMap)
+    //       self.setState({
+    //         hasSetApiGoogleMap: true
+    //       });
+    //     });
+    // }
 
 
     if (!Define.constants.debug) {
@@ -970,7 +970,7 @@ var App = createReactClass({
     var self= this;
     const { dispatch,state,appState, navigator, notify} = this.props;
     var content;
-    if (appState.currentState === RDActionsTypes.AppState.constants.APP_STATE_LIST.LOADING || !this.state.hasSetApiGoogleMap || this.state.wakeByLocation) {
+    if (appState.currentState === RDActionsTypes.AppState.constants.APP_STATE_LIST.LOADING || this.state.wakeByLocation) {
       return this.renderContentAtLoading();
     }else{
       content = (
@@ -1068,24 +1068,28 @@ var App = createReactClass({
         .then(this.getConfigReview)
     }
 
-    messaging().onNotificationOpenedApp(remoteMessage => {
-     console.log(
-       'Notification caused app to open from background state:',
-       remoteMessage.notification,
-     );
-   });
+    setTimeout(() => {
+      RNBootSplash.hide();
+    }, 500);
 
-   // Check whether an initial notification is available
-   messaging()
-     .getInitialNotification()
-     .then(remoteMessage => {
-       if (remoteMessage) {
-         console.log(
-           'Notification caused app to open from quit state:',
-           remoteMessage.notification,
-         );
-       }
-     });
+  //   messaging().onNotificationOpenedApp(remoteMessage => {
+  //    console.log(
+  //      'Notification caused app to open from background state:',
+  //      remoteMessage.notification,
+  //    );
+  //  });
+
+  //  // Check whether an initial notification is available
+  //  messaging()
+  //    .getInitialNotification()
+  //    .then(remoteMessage => {
+  //      if (remoteMessage) {
+  //        console.log(
+  //          'Notification caused app to open from quit state:',
+  //          remoteMessage.notification,
+  //        );
+  //      }
+  //    });
   },
   componentDidCatch: function(e) {
     if (!Define.constants.debug) {

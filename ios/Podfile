@@ -40,13 +40,13 @@ target 'sanship' do
   pod 'glog', :podspec => '../node_modules/react-native/third-party-podspecs/glog.podspec'
   pod 'Folly', :podspec => '../node_modules/react-native/third-party-podspecs/Folly.podspec'
 
-  pod 'react-native-google-maps', :path => '../node_modules/react-native-maps'
-  pod 'GoogleMaps'
-  pod 'Google-Maps-iOS-Utils'
+  # pod 'react-native-google-maps', :path => '../node_modules/react-native-maps'
+  # pod 'GoogleMaps'
+  # pod 'Google-Maps-iOS-Utils'
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
   pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
   pod 'react-native-geolocation', path: '../node_modules/@react-native-community/geolocation'
-  pod 'RNCharts', :path => '../node_modules/react-native-charts-wrapper'
+  # pod 'RNCharts', :path => '../node_modules/react-native-charts-wrapper'
 
   pod 'FBSDKCoreKit', '~> 5.8', :modular_headers => true
 

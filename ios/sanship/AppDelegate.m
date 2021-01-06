@@ -12,14 +12,14 @@
 #import <React/RCTRootView.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 #import <RNCPushNotificationIOS.h>
-#import "RNCallKeep.h"
+//#import "RNCallKeep.h"
 #import <PushKit/PushKit.h>
 #import "RNVoipPushNotificationManager.h"
 #import <React/RCTLinkingManager.h>
 #import <CodePush/CodePush.h>
 #import <Firebase.h>
 #import "RNBootSplash.h"
-@import GoogleMaps;
+//@import GoogleMaps;
 
 @implementation AppDelegate
 NSDictionary* initialLaunchOptions;
@@ -157,9 +157,10 @@ fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler
 continueUserActivity:(NSUserActivity *)userActivity
  restorationHandler:(void(^)(NSArray * __nullable restorableObjects))restorationHandler
 {
-  return [RNCallKeep application:application
-           continueUserActivity:userActivity
-             restorationHandler:restorationHandler];
+//  return [RNCallKeep application:application
+//           continueUserActivity:userActivity
+//             restorationHandler:restorationHandler];
+  return nil;
 }
 
 /* Add PushKit delegate method */
@@ -183,7 +184,7 @@ continueUserActivity:(NSUserActivity *)userActivity
   NSString *uuid = [payload.dictionaryPayload valueForKeyPath:@"extras.roomId"];
   NSString *handle = payload.dictionaryPayload[@"phone"];
   
-  [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:false localizedCallerName: nil fromPushKit: YES payload:nil];
+//  [RNCallKeep reportNewIncomingCall:uuid handle:handle handleType:@"generic" hasVideo:false localizedCallerName: nil fromPushKit: YES payload:nil];
 
 }
 @end

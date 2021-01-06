@@ -11,7 +11,7 @@
 #import <Foundation/Foundation.h>
 #import "Util.h"
 //#import "CodePush.h"
-#import <GoogleMaps/GoogleMaps.h>
+//#import <GoogleMaps/GoogleMaps.h>
 
 @implementation Util
 
@@ -26,7 +26,7 @@ RCT_EXPORT_MODULE();
 RCT_EXPORT_METHOD(setApiKeyGoogleMap:(NSString *) apiKey) {
 //  [GMSServices provideAPIKey:@"AIzaSyBIidO3qxiwdjdX_GT1fLRvfGM8E8D4WIc"];
 //  NSLog(@"haha set api key ne");
-  [GMSServices provideAPIKey:apiKey];
+//  [GMSServices provideAPIKey:apiKey];
 }
 
 @end
