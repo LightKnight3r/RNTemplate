@@ -35,6 +35,8 @@ var Themes = require('../../Themes');
 var Util = require('../../Util/Util');
 var Include = require('../../Include');
 var StatusBarAndroid = require('react-native-android-statusbar');
+var I18n = require('../../Util/i18n');
+import CodePush from 'react-native-code-push';
 
 var {popupActions} = require('../popups/PopupManager');
 var {globalVariableManager}= require('../modules/GlobalVariableManager');
@@ -137,7 +139,7 @@ class LoginScreen extends Screen{
     return content;
   }
   renderScreenContent(){
-    var {dispatch, user,tips, appState} = this.props;
+    var {dispatch, user,tips, appState, appSetting} = this.props;
     var content = null;
 
     content = (
@@ -172,8 +174,8 @@ class LoginScreen extends Screen{
               }}>
 
               <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                <Include.Text style={{fontSize: 32, color:'#1697B4'}}>Xin Chào.</Include.Text>
-                <Include.Text style={{fontSize: 18, color:'#707070'}}>Hãy Đăng nhập để bắt đầu</Include.Text>
+                <Include.Text style={{fontSize: 32, color:'#1697B4'}}>{I18n.t('LoginScreen').greeting}</Include.Text>
+                <Include.Text style={{fontSize: 18, color:'#707070'}}>{I18n.t('LoginScreen').instruction}</Include.Text>
               </View>
           </Animatable.View>
             <Animatable.View
@@ -187,7 +189,18 @@ class LoginScreen extends Screen{
                 }}>
             <TouchableOpacity
               onPress={() => {
-                Actions.HomeScreen();
+                if(appSetting.language !== 'en') {
+                  popupActions.setRenderContentAndShow(DefaultPopup,{
+                    title: 'Thông báo',
+                    description:'Khởi động lại để áp dụng ngôn ngữ',
+                    buttonTitle:'OK',
+                    onPress:() => {
+                      dispatch(RDActions.AppSetting.switchLanguage('en'))
+                      CodePush.restartApp();
+                    }
+                  })
+
+                }
               }}
               delayLongPress={4000}
               onLongPress={()=>{
@@ -195,13 +208,95 @@ class LoginScreen extends Screen{
               }}>
               <LinearGradient
                 {...Themes.current.linearConfig}
-                style={{ flexDirection:'row', borderRadius: 25, height: 50, alignItems: 'center', justifyContent: 'center', width: 280,marginTop: 20}}>
+                style={{ flexDirection:'row', borderRadius: 25, height: 50,  backgroundColor:appSetting.language === 'en' ? null : 'grey', alignItems: 'center', justifyContent: 'center', width: 280,marginTop: 20}}>
                   <Include.Image source={Define.assets.Images.phoneLogin}
                   resizeMode={'stretch'}
                   style={{width: 40, height: 40, marginLeft:5}} />
                   <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                     <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
-                      Đăng nhập vào hệ thống
+                      {I18n.t('LoginScreen').textEn}
+                    </Include.Text>
+                  </View>
+              </LinearGradient>
+            </TouchableOpacity>
+          </Animatable.View>
+            <Animatable.View
+              animation="fadeIn"
+              easing="linear"
+              duration={1500}
+              style={{
+                  justifyContent:'center',
+                  alignItems:'center',
+                  flex: 1
+                }}>
+            <TouchableOpacity
+              onPress={() => {
+                if(appSetting.language !== 'vi') {
+                  popupActions.setRenderContentAndShow(DefaultPopup,{
+                    title: 'Alert',
+                    description:'Reload to apply language',
+                    buttonTitle:'OK',
+                    onPress:() => {
+                      dispatch(RDActions.AppSetting.switchLanguage('vi'))
+                      CodePush.restartApp();
+                    }
+                  })
+                }
+              }}
+              delayLongPress={4000}
+              onLongPress={()=>{
+
+              }}>
+              <LinearGradient
+                {...Themes.current.linearConfig}
+                style={{ flexDirection:'row', backgroundColor:appSetting.language === 'vi' ? null : 'grey', borderRadius: 25, height: 50, alignItems: 'center', justifyContent: 'center', width: 280,marginTop: 20}}>
+                  <Include.Image source={Define.assets.Images.phoneLogin}
+                  resizeMode={'stretch'}
+                  style={{width: 40, height: 40, marginLeft:5}} />
+                  <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                    <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
+                      {I18n.t('LoginScreen').textVi}
+                    </Include.Text>
+                  </View>
+              </LinearGradient>
+            </TouchableOpacity>
+          </Animatable.View>
+            <Animatable.View
+              animation="fadeIn"
+              easing="linear"
+              duration={1500}
+              style={{
+                  justifyContent:'center',
+                  alignItems:'center',
+                  flex: 1
+                }}>
+            <TouchableOpacity
+              onPress={() => {
+                if(appSetting.language !== 'zh') {
+                  popupActions.setRenderContentAndShow(DefaultPopup,{
+                    title: '警报',
+                    description:'重新加载以应用语言',
+                    buttonTitle:'好',
+                    onPress:() => {
+                      dispatch(RDActions.AppSetting.switchLanguage('zh'))
+                      CodePush.restartApp();
+                    }
+                  })
+                }
+              }}
+              delayLongPress={4000}
+              onLongPress={()=>{
+
+              }}>
+              <LinearGradient
+                {...Themes.current.linearConfig}
+                style={{ flexDirection:'row', backgroundColor:appSetting.language === 'vi' ? null : 'grey', borderRadius: 25, height: 50, alignItems: 'center', justifyContent: 'center', width: 280,marginTop: 20}}>
+                  <Include.Image source={Define.assets.Images.phoneLogin}
+                  resizeMode={'stretch'}
+                  style={{width: 40, height: 40, marginLeft:5}} />
+                  <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+                    <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
+                      {I18n.t('LoginScreen').textZh}
                     </Include.Text>
                   </View>
               </LinearGradient>

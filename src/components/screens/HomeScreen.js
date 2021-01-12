@@ -21,6 +21,9 @@ var Themes = require('../../Themes');
 var Util = require('../../Util/Util');
 var Include = require('../../Include');
 
+var I18n = require('../../Util/i18n');
+
+
 var {popupActions} = require('../popups/PopupManager');
 var {globalVariableManager}= require('../modules/GlobalVariableManager');
 

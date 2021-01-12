@@ -71,6 +71,7 @@ function AppSetting(state ={
                   SettingScreen_NumberFeedsDisplay:false,
                   SettingScreen_NumberFeedsCache:false,
                 },
+                language:'',
                 countTipsImageOrder: 0,
                 countSuggestLocation: 0,
                 recentlyLocation:[]
@@ -536,6 +537,17 @@ function AppSetting(state ={
                   onRequest:(stateTempIn)=>{
                     stateTempIn.recentlyLocation.unshift(action.data)
                     stateTempIn.recentlyLocation = _.clone((_.uniqWith(stateTempIn.recentlyLocation, _.isEqual)).slice(0,5), true);
+                    return stateTempIn;
+                  }
+                })
+      break;
+    }
+
+    case RDActionsTypes.AppSetting.switchLanguage:{
+      stateTemp = RDUtil.processReducerLoading(state,action,'switchLanguage',
+                {
+                  onRequest:(stateTempIn)=>{
+                    stateTempIn.language = action.data
                     return stateTempIn;
                   }
                 })

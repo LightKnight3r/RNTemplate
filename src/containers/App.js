@@ -79,6 +79,9 @@ var Util = require('../Util/Util');
 var Themes = require('../Themes');
 var Define = require('../Define');
 var Include = require('../Include');
+import I18n from "i18n-js";
+import * as RNLocalize from "react-native-localize";
+
 
 
 import SideBar from '../components/elements/SideBar'
@@ -549,8 +552,17 @@ var App = createReactClass({
     var self = this;
     var { dispatch,state,appState, user,appSetting} = this.props;
 
+
     globalVariableManager.reduxManager.setDispatchAndState(dispatch,state);
     globalVariableManager.rootView = self;
+    if(!appSetting.language) {
+      const locales = RNLocalize.getLocales();
+      if (Array.isArray(locales)) {
+        I18n.locale = locales[0].languageTag;
+      }
+    } else {
+      I18n.locale = appSetting.language
+    }
 
     if (Platform.OS === 'android') {
       Keyboard.addListener('keyboardDidShow', this.keyboardWillShow)
