@@ -1,4 +1,4 @@
-package com.sanship;
+package com.gz;
 
 import android.content.Context;
 import android.content.Intent;
@@ -76,7 +76,7 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "SanShip";
+        return "GZ";
     }
 
     @Override

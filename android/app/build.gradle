@@ -133,7 +133,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.sanship"
+        applicationId "com.gz"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
@@ -178,13 +178,13 @@ android {
     }
     productFlavors {
         dev {
-            applicationId "com.sanship.dev"
+            applicationId "com.gz.dev"
             versionCode 110002
             versionName "11.0.02"
             signingConfig signingConfigs.dev
         }
         pro {
-            applicationId "com.sanship.pro"
+            applicationId "com.gz.pro"
             versionCode 110002
             versionName "11.0.02"
             signingConfig signingConfigs.release

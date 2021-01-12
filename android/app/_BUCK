@@ -46,13 +46,13 @@ android_library(
 
 android_build_config(
   name = 'build_config',
-  package = 'com.sanship',
+  package = 'com.gz',
 )
 
 android_resource(
   name = 'res',
   res = 'src/main/res',
-  package = 'com.sanship',
+  package = 'com.gz',
 )
 
 android_binary(

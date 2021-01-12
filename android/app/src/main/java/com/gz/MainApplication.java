@@ -6,7 +6,7 @@
 * @Last modified time: 2016-07-11T14:39:57+07:00
 */
 
-package com.sanship;
+package com.gz;
 
 import android.app.Application;
 import android.content.Context;

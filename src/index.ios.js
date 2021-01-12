@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class SanShip extends Component {
+class GZ extends Component {
   constructor() {
     super();
     this.state = {
@@ -93,4 +93,4 @@ class SanShip extends Component {
 
 
 
-AppRegistry.registerComponent('sanship', () => SanShip);
+AppRegistry.registerComponent('gz', () => GZ);

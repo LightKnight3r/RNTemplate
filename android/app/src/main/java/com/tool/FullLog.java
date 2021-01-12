@@ -2,7 +2,7 @@ package com.tool;
 
 import android.util.Log;
 
-import com.sanship.BuildConfig;
+import com.gz.BuildConfig;
 
 public class FullLog {
     public final static boolean DEBUG = true;

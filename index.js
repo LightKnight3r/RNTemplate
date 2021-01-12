@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   },
 });
 
-class SanShip extends Component {
+class GZ extends Component {
   constructor() {
     super();
     this.state = {
@@ -107,4 +107,4 @@ const updateDialog = {
   optionalUpdateMessage: "Bản cập nhật mới cải tiến sửa lỗi ứng dụng. Bạn vui lòng cho phép ứng dụng cài đặt. Sau đó chờ trong giây lát. Xin cảm ơn.",
   title: "Cập nhật ứng dụng"
 }
-AppRegistry.registerComponent('sanship', () => codePush({ updateDialog, installMode: codePush.InstallMode.IMMEDIATE, checkFrequency: codePush.CheckFrequency.ON_APP_RESUME })(SanShip));
+AppRegistry.registerComponent('gz', () => codePush({ updateDialog, installMode: codePush.InstallMode.IMMEDIATE, checkFrequency: codePush.CheckFrequency.ON_APP_RESUME })(GZ));

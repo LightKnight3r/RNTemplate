@@ -85,7 +85,7 @@ var notifyFormat={
 
     // variable
 
-  class SanShip extends Component {
+  class GZ extends Component {
     constructor() {
       super();
 
@@ -138,5 +138,5 @@ var notifyFormat={
 
 
 
-  AppRegistry.registerComponent('SanShip', () => SanShip);
+  AppRegistry.registerComponent('GZ', () => GZ);
 //}
