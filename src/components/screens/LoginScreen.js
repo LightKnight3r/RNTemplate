@@ -196,7 +196,10 @@ class LoginScreen extends Screen{
                     buttonTitle:'OK',
                     onPress:() => {
                       dispatch(RDActions.AppSetting.switchLanguage('en'))
-                      CodePush.restartApp();
+                      popupActions.popPopup();
+                      setTimeout(() => {
+                        CodePush.restartApp();
+                      }, 300);
                     }
                   })
 
@@ -238,7 +241,10 @@ class LoginScreen extends Screen{
                     buttonTitle:'OK',
                     onPress:() => {
                       dispatch(RDActions.AppSetting.switchLanguage('vi'))
-                      CodePush.restartApp();
+                      popupActions.popPopup();
+                      setTimeout(() => {
+                        CodePush.restartApp();
+                      }, 300);
                     }
                   })
                 }
@@ -279,7 +285,10 @@ class LoginScreen extends Screen{
                     buttonTitle:'好',
                     onPress:() => {
                       dispatch(RDActions.AppSetting.switchLanguage('zh'))
-                      CodePush.restartApp();
+                      popupActions.popPopup();
+                      setTimeout(() => {
+                        CodePush.restartApp();
+                      }, 300);
                     }
                   })
                 }
