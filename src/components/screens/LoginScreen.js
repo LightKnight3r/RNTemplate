@@ -74,6 +74,7 @@ class LoginScreen extends Screen{
   // static propTypes = {}
   constructor(props){
     super(props);
+    this.translate = I18n.t(props.navigator.currentScreen.name);
     this.state = _.merge(this.state,
     {})
     this.handleNavigateScreen = this.handleNavigateScreen.bind(this);
@@ -174,8 +175,8 @@ class LoginScreen extends Screen{
               }}>
 
               <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                <Include.Text style={{fontSize: 32, color:'#1697B4'}}>{I18n.t('LoginScreen').greeting}</Include.Text>
-                <Include.Text style={{fontSize: 18, color:'#707070'}}>{I18n.t('LoginScreen').instruction}</Include.Text>
+                <Include.Text style={{fontSize: 32, color:'#1697B4'}}>{this.translate.greeting}</Include.Text>
+                <Include.Text style={{fontSize: 18, color:'#707070'}}>{this.translate.instruction}</Include.Text>
               </View>
           </Animatable.View>
             <Animatable.View
@@ -217,7 +218,7 @@ class LoginScreen extends Screen{
                   style={{width: 40, height: 40, marginLeft:5}} />
                   <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                     <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
-                      {I18n.t('LoginScreen').textEn}
+                      {this.translate.textEn}
                     </Include.Text>
                   </View>
               </LinearGradient>
@@ -261,7 +262,7 @@ class LoginScreen extends Screen{
                   style={{width: 40, height: 40, marginLeft:5}} />
                   <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                     <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
-                      {I18n.t('LoginScreen').textVi}
+                      {this.translate.textVi}
                     </Include.Text>
                   </View>
               </LinearGradient>
@@ -305,7 +306,7 @@ class LoginScreen extends Screen{
                   style={{width: 40, height: 40, marginLeft:5}} />
                   <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                     <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
-                      {I18n.t('LoginScreen').textZh}
+                      {this.translate.textZh}
                     </Include.Text>
                   </View>
               </LinearGradient>
