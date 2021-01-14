@@ -50,6 +50,7 @@ import com.airbnb.android.react.lottie.LottiePackage;
 import com.facebook.react.PackageList;
 import com.facebook.soloader.SoLoader;
 import java.lang.reflect.InvocationTargetException;
+import com.microsoft.codepush.react.CodePush;
 
 class UpdateTask extends AsyncTask<Void, Boolean, Void> {
 
@@ -121,7 +122,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     }
     super.onCreate();
     SoLoader.init(this, /* native exopackage */ false);
-    initializeFlipper(this); // Remove this line if you don't want Flipper enabled
+    initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
     HotUpdateManager.getInstance().initReact(getReactNativeHost().getReactInstanceManager());
   }
 
@@ -147,7 +148,7 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
     // bundle location from on each app start
     @Override
     protected String getJSBundleFile() {
-      return HotUpdateManager.getInstance().getPathAvailableBundleFile();
+      return CodePush.getJSBundleFile();
     }
 
     protected List<ReactPackage> getPackages() {
@@ -169,15 +170,17 @@ public class MainApplication extends MultiDexApplication implements ReactApplica
  *
  * @param context
  */
-private static void initializeFlipper(Context context) {
+ private static void initializeFlipper(Context context, ReactInstanceManager reactInstanceManager) {
     if (BuildConfig.DEBUG) {
       try {
         /*
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.facebook.flipper.ReactNativeFlipper");
-        aClass.getMethod("initializeFlipper", Context.class).invoke(null, context);
+        Class<?> aClass = Class.forName("com.rndiffapp.ReactNativeFlipper");
+        aClass
+            .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
+            .invoke(null, context, reactInstanceManager);
       } catch (ClassNotFoundException e) {
         e.printStackTrace();
       } catch (NoSuchMethodException e) {
