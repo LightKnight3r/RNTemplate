@@ -19,7 +19,7 @@
     "@react-native-community/viewpager": "3.3.0",
     "@react-native-firebase/analytics": "6.7.2",
     "@react-native-firebase/app": "6.7.1",
-    "@react-native-firebase/messaging": "^7.0.1",
+    "@react-native-firebase/messaging": "7.0.1",
     "@twotalltotems/react-native-otp-input": "https://github.com/sonnt612/react-native-otp-input.git",
     "axios": "0.15.3",
     "i18n-js": "^3.8.0",
