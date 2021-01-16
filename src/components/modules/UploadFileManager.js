@@ -11,6 +11,8 @@ import {
   Platform
 } from 'react-native';
 
+import Upload from 'react-native-background-upload';
+
 // import { connect } from 'react-redux';
 
 //action
@@ -165,64 +167,86 @@ class UploadFileManager{
     }
     var argTemp = Util.dataProtectAndMap(arg, argFormat);
 
-    var req ;
-    // req config
-    var temp = new FormData();
-
-    if(arg.fileUpload) {
-      temp.append('fileUpload', {
-        uri: arg.fileUpload,
-        name: arg.fileName ? arg.fileName : "image.jpg",
-        type: 'multipart/form-data'
-      })
-      temp.append('folder', arg.folder);
-    }
-    req = temp;
-    //
-    var data = {};
     var promise = new Promise((resolve,reject)=>{
 
       const serverAddr = Define.constants.serverMediaAddr
       const preLinkApi = '/api/v1.0'
       const query = '/upload-single'
-      fetch(`${serverAddr}${preLinkApi}${query}`,{
-        method: 'post',
+
+      const options = {
+        url: `${serverAddr}${preLinkApi}${query}`,
+        path: arg.fileUpload,
+        method: 'POST',
+        type: 'multipart',
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'content-type': arg.mimeType
         },
-        body: req
-      })
-      .then((response) => {
-        return response.json()
-      })
-      .then((response)=>{
-        if(response.code === 200) {
-          var res = response;
-          data={
-            arg:argTemp,
-            res:res,
-          }
-          this.addFile(arg.id, 'url', res.filename ? res.filename : '')
-          this.handleDisplayComponent(arg.id);
-          resolve(data);
-        }else{
-          if(argTemp.fileUpload) {
-            globalVariableManager.rootView.showToast('Gửi ảnh thất bại');
-          }
-          return Promise.reject(response)
+        field: 'fileUpload',
+        parameters: {
+          name: arg.fileName,
+          folder: arg.folder
         }
-      })
-      .catch((err)=>{
-        if(argTemp.fileUpload) {
+      }
+
+      Upload.startUpload(options).then((uploadId) => {
+        console.log('Upload started')
+        Upload.addListener('progress', uploadId, (data) => {
+          console.log(`Progress: ${data.progress}%`)
+        })
+
+        Upload.addListener('error', uploadId, (data) => {
+          console.log(`Error: ${data.error}%`)
+        })
+
+        Upload.addListener('cancelled', uploadId, (data) => {
+          console.log(`Cancelled!`)
+        })
+
+        Upload.addListener('completed', uploadId, (data) => {
+          console.log('Completed!', data)
+
+          if (data.responseCode === 200) {
+            const response = JSON.parse(data.responseBody);
+
+            if(response.code === 200) {
+              const data = {
+                arg: argTemp,
+                res: response,
+              }
+
+              this.addFile(arg.id, 'url', response.filename ? response.filename : '')
+              this.handleDisplayComponent(arg.id);
+
+              resolve(data);
+            } else {
+              if (argTemp.fileUpload) {
+                globalVariableManager.rootView.showToast('Gửi ảnh thất bại');
+              }
+
+              return Promise.reject(response)
+            }
+          } else {
+            if (argTemp.fileUpload) {
+              globalVariableManager.rootView.showToast('Gửi ảnh thất bại');
+            }
+
+            reject({
+              arg: argTemp,
+              res: data.responseCode
+            });
+          }
+        })
+      }).catch((err) => {
+        if (argTemp.fileUpload) {
           globalVariableManager.rootView.showToast('Gửi ảnh thất bại');
         }
-        data={
-          arg:argTemp,
-          err:JSON.stringify(err),
-          res:err,
-          errObj:err,
-        }
-        reject(data);
+
+        reject({
+          arg: argTemp,
+          err: JSON.stringify(err),
+          res: err,
+          errObj: err,
+        });
       })
     })
     return promise;

@@ -37,8 +37,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) truy cập camera để chụp ảnh xác thực thông tin</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string></string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) muốn truy cập vào thư mục ảnh để bạn có thể chọn hình ảnh</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Ionicons.ttf</string>
