@@ -19,41 +19,6 @@ function initLoading(){
   return retObj;
 }
 
-var memberInfoFormat={
-  member: {
-    facebook:{
-      id:'',
-      name:'',
-      birthday:'',
-      picture:'',
-      email:'',
-      token:''
-    },
-    shop:{
-      isAuthen:0,
-    },
-    _id:'',
-    memberToken:'',
-    phone:'',
-    os_version:{},
-    name:'',
-    address:'',
-    email:'',
-    birthday:{},
-
-    // v2
-    type: 0,
-    likes:0,
-    dislikes:0,
-    coints:0,
-    expireTime: 0,
-    isExpire: true,
-    blockUtil: 0,
-    createdAt: 0,
-    updatedAt: 0,
-  }
-}
-
 function User(state ={
                 ...initLoading(),
                 memberInfo:{},
@@ -74,20 +39,6 @@ function User(state ={
               } , action) {
   var stateTemp =state;
   switch (action.type) {
-    case RDActionsTypes.User.trackingAction:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'trackingAction',
-                {
-                  onSuccess:(stateTempIn) => {
-                    stateTempIn.lastTracking = Date.now();
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
-
-      break;
-    }
 
     case RDActionsTypes.User.getInfoFromAccessToken:{
       stateTemp = RDUtil.processReducerLoading(state,action,'getInfoFromAccessToken',
@@ -96,65 +47,6 @@ function User(state ={
                     // stateTempIn.memberInfo.member.name = action.data.res.data.name;
                     // stateTempIn.memberInfo.member.facebook.picture = action.data.res.data.picture;
                     // stateTempIn.memberInfo.member.email = action.data.res.data.email;
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
-
-      break;
-    }
-    case RDActionsTypes.User.login:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'login',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo = Util.dataProtectAndMap(action.data.res,memberInfoFormat)
-                    stateTempIn.phonePrediction = action.data.res.member.phone;
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-    case RDActionsTypes.User.loginByPhone:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'loginByPhone',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo = Util.dataProtectAndMap(action.data.res,memberInfoFormat)
-                    stateTempIn.phonePrediction = action.data.arg.phone;
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
-
-      break;
-    }
-    case RDActionsTypes.User.resetPassword:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'resetPassword',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo = Util.dataProtectAndMap(action.data.res,memberInfoFormat)
-                    stateTempIn.phonePrediction = action.data.arg.phone;
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
-
-      break;
-    }
-    case RDActionsTypes.User.resetPasswordByNewPhoneAuthen:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'resetPasswordByNewPhoneAuthen',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo = Util.dataProtectAndMap(action.data.res,memberInfoFormat)
-                    stateTempIn.phonePrediction = action.data.arg.phone;
                     return stateTempIn;
                   },
                   onError: (stateTempIn) => {
@@ -178,12 +70,12 @@ function User(state ={
 
       break;
     }
-    case RDActionsTypes.User.get:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'get',
+    case RDActionsTypes.User.getInfo:{
+      stateTemp = RDUtil.processReducerLoading(state,action,'getInfo',
                 {
                   onSuccess:(stateTempIn)=>{
-                    const memberInfo =  Util.dataProtectAndMap(action.data.res,memberInfoFormat);
-                    memberInfo.member.memberToken = stateTempIn.memberInfo.member.memberToken;
+                    const memberInfo =  Util.dataProtectAndMap(action.data.res.data);
+                    memberInfo.token = stateTempIn.memberInfo.token;
                     stateTempIn.memberInfo = memberInfo;
                     return stateTempIn;
                   },
@@ -194,244 +86,12 @@ function User(state ={
 
       break;
     }
-    case RDActionsTypes.User.updatePhoneNumber:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'updatePhoneNumber',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.phone = action.data.res.phone;
-                    stateTempIn.phonePrediction = action.data.res.phone;
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-    case RDActionsTypes.User.changePhoneNumber:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'changePhoneNumber',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.phone = action.data.res.phone;
-                    stateTempIn.phonePrediction = action.data.res.phone;
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
 
-      break;
-    }
-
-    case RDActionsTypes.User.changePhoneNumberByNewPhoneAuthen:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'changePhoneNumberByNewPhoneAuthen',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.phone = action.data.res.phone;
-                    stateTempIn.phonePrediction = action.data.res.phone;
-                    return stateTempIn;
-                  },
-                  onError: (stateTempIn) => {
-                    return stateTempIn;
-                  }
-                })
-
-      break;
-    }
-
-    case RDActionsTypes.User.doneTraining:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'doneTraining',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.training = 1;
-                    return stateTempIn;
-                  }
-                })
-
-      break;
-    }
-    case RDActionsTypes.User.toggleReceiveOrder:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'toggleReceiveOrder',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.receivePushOrder = action.data.arg.isReceive;
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-    // case RDActionsTypes.User.updateProfile:{
-    //   stateTemp = RDUtil.processReducerLoading(state,action,'updateProfile',
-    //             {
-    //               onSuccess:(stateTempIn)=>{
-    //                 _.set(action.data.res, 'member.isExpire', stateTempIn.memberInfo.member.isExpire);
-    //                 stateTempIn.memberInfo = Util.dataProtectAndMap(action.data.res,memberInfoFormat)
-    //                 return stateTempIn;
-    //               },
-    //               onError: (stateTempIn) => {
-    //                 return stateTempIn;
-    //               }
-    //             })
-    //
-    //   break;
-    // }
-    case RDActionsTypes.User.bankCharging:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'bankCharging',
-                {
-
-                })
-
-      break;
-    }
-    case RDActionsTypes.User.cardCharging:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'cardCharging',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    if(action.data.res.coints) {
-                      stateTempIn.memberInfo.member.coints = action.data.res.coints
-                    }
-                    return stateTempIn;
-                  }
-                })
-
-      break;
-    }
-    case RDActionsTypes.User.buyPackage:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'buyPackage',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    if(_.has(action.data.res, 'newCoints')) {
-                      stateTempIn.memberInfo.member.coints = action.data.res.newCoints
-                    } else if(_.has(action.data.res, 'newRealMoney')) {
-                      stateTempIn.memberInfo.member.realMoney = action.data.res.newRealMoney
-                    }
-                    stateTempIn.memberInfo.member.expireTime = action.data.res.newExpireTime
-                    stateTempIn.memberInfo.member.isExpire = false
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-
-    case RDActionsTypes.User.getInfoCheckout:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'getInfoCheckout',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.coints = action.data.res.data;
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-
-    case RDActionsTypes.User.getInfoPaymentMomo:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'getInfoPaymentMomo',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.coints = action.data.res.data;
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-    case RDActionsTypes.User.transferSSMToCoints:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'transferSSMToCoints',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.realMoney = action.data.res.data.realMoney;
-                    stateTempIn.memberInfo.member.coints = action.data.res.data.coints;
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-    case RDActionsTypes.User.withdrawVimo:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'withdrawVimo',
-                {
-                  onSuccess:(stateTempIn)=>{
-                    stateTempIn.memberInfo.member.realMoney = action.data.res.data.realMoney;
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-
-    case RDActionsTypes.User.getHotNews:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'getHotNews',
-                {
-                  onSuccess:(stateTempIn) => {
-                    if (action.data.res.data) {
-                      if (!action.data.arg.serviceId) {
-                        stateTempIn.hotnews[action.data.arg.type].general.push(action.data.res.data);
-                      } else {
-                        if (!stateTempIn.hotnews[action.data.arg.type][action.data.arg.serviceId]) {
-                          stateTempIn.hotnews[action.data.arg.type][action.data.arg.serviceId] = [];
-                        }
-
-                        stateTempIn.hotnews[action.data.arg.type][action.data.arg.serviceId].push(action.data.res.data);
-                      }
-                    }
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-
-    case RDActionsTypes.User.listServiceRegister:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'listServiceRegister',
-                {
-                  onSuccess:(stateTempIn) => {
-                    if (action.data.res.data) {
-                      stateTempIn.serviceRunning = action.data.res.data
-                    }
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-
-    case RDActionsTypes.User.switchService:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'switchService',
-                {
-                  onSuccess:(stateTempIn) => {
-                    let count = 0
-                    if(stateTempIn.memberInfo.member && stateTempIn.serviceRunning && stateTempIn.serviceRunning.services) {
-                      stateTempIn.serviceRunning.services.forEach((service) => {
-                        if(action.data.res.data.includes(service._id)) {
-                          service.active = 1;
-                          count ++
-                        } else {
-                          service.active = 0
-                        }
-                      })
-                      stateTempIn.serviceRunning.count = count;
-                    }
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-
-    case RDActionsTypes.User.getPoint:{
-      stateTemp = RDUtil.processReducerLoading(state, action, 'getPoint',
-        {
-          onSuccess:(stateTempIn) => {
-            if(action.data && action.data.res && action.data.res.data && action.data.res.data.point >= 0) {
-              stateTempIn.memberInfo.member.point = action.data.res.data.point;
-            }
-            return stateTempIn;
-          }
-        })
-      break;
-    }
-
-    case RDActionsTypes.User.loginWithoutPassword: {
-      stateTemp = RDUtil.processReducerLoading(state, action, 'loginWithoutPassword',
+    case RDActionsTypes.User.login: {
+      stateTemp = RDUtil.processReducerLoading(state, action, 'login',
                 {
                   onSuccess: (stateTempIn) => {
-                    stateTempIn.memberInfo = Util.dataProtectAndMap(action.data.res, memberInfoFormat)
-                    stateTempIn.phonePrediction = action.data.arg.phone;
+                    stateTempIn.memberInfo = Util.dataProtectAndMap(action.data.res.data)
                     return stateTempIn;
                   },
                   onError: (stateTempIn) => {

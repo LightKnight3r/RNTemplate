@@ -173,7 +173,6 @@ class NavigatorManager extends EventEmitter {
           },
           name: extras.locationName
         }
-        globalVariableManager.reduxManager.dispatch(UserActions_MiddleWare.addDefaultOrigin(defaultOriginPlace));
       }
     }
   }

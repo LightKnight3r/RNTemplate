@@ -61,7 +61,8 @@ var Define = {
 
     navBarHeight: Platform.OS === 'android' ? 70 : PlatformConfig.default.navBarHeight,
     X : (widthScreen<heightScreen? widthScreen : heightScreen)/ ((screenSizeByInch<7)?9.25:12) ,
-    serverAddr :'http://localhost:8000',
+    serverAddr :'http://192.168.0.113:2021',
+    serverMediaAddr :'http://192.168.0.112:1996',
     proxyAddr: 'http://localhost:3000',
 
     apiVersion:2,

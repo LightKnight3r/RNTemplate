@@ -91,9 +91,9 @@ function Tracker(state ={} , action) {
         //     description:'Phiên đăng nhập đã hết hạn',
         //     onPressPopup:()=>{popupActions.popPopup()}
         //   })
-        if(globalVariableManager.reduxManager.state.User.memberInfo?.member?.memberToken) {
-          popupActions.popAllPopup();
-          setTimeout(()=>{
+        if(globalVariableManager.reduxManager.state.User.memberInfo?.token) {
+          // popupActions.popAllPopup();
+          // setTimeout(()=>{
             globalVariableManager.reduxManager.dispatch(UserActions_MiddleWare.logout())
               .then(() => {
                 Actions.LoginScreen({
@@ -106,7 +106,7 @@ function Tracker(state ={} , action) {
                 })
               })
             globalVariableManager.rootView.drawSideMenu(false);
-          },200)
+          // },200)
         }
       } else if (action.data.errObj && action.data.errObj.message === 'Network Error') {
         popupCount = _.includes(popupActions.getPopupStack(), 'NoNetworkPopup')

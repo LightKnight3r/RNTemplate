@@ -72,8 +72,8 @@ class RDActions_MiddleWare {
           req.platform = Platform.OS;
           req.nativeVersion = Define.constants.nativeVersion;
 
-          if (_.get(getState(), 'User.memberInfo.member.memberToken', '')) {
-            req.memberToken = _.get(getState(), 'User.memberInfo.member.memberToken', '');
+          if (_.get(getState(), 'User.memberInfo.token', '')) {
+            req.token = _.get(getState(), 'User.memberInfo.token', '');
           }
 
           Debug.log(preTextLog+':'+query+':'+JSON.stringify(req));
@@ -112,18 +112,18 @@ class RDActions_MiddleWare {
               let apiVersion = obj.apiVersion;
               switch (apiVersion) {
                 case 1:{
-                  preLinkApi = '/api/v1.0';
+                  preLinkApi = '/v1.0';
                   break;
                 }
                 case 2:{
-                  preLinkApi = '/api/v2.0';
+                  preLinkApi = '/v2.0';
                   break;
                 }
                 default:{
                   if (typeof(apiVersion) === 'string') {
-                    preLinkApi = '/api/v'+apiVersion;
+                    preLinkApi = '/v'+apiVersion;
                   }else{
-                    preLinkApi = '/api/v1.0';
+                    preLinkApi = '/v1.0';
                   }
 
                 }

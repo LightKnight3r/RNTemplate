@@ -68,7 +68,7 @@ var Default ={
     container:{
       // flex:1,
       height:Define.constants.availableHeightScreen,
-      width: X*7.5,//Define.constants.widthScreen,
+      width: X*3.5,//Define.constants.widthScreen,
       backgroundColor:'#2d2d2d',
       paddingLeft:X*0.2,
       // paddingTop:X*0.4,
