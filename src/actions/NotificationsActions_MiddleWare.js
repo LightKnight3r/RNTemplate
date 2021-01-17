@@ -34,45 +34,7 @@ class NotificationsActions_MiddleWare extends RDActions_MiddleWare {
       onArg: (arg, getState) => {
         return {
           ...arg,
-          memberToken: _.get(getState(), 'User.memberInfo.member.memberToken', '')
-        }
-      },
-      onError: undefined, // (dispatch,getState,data)=>{return true},
-      onDone: (dispatch, getState, data) => {
-        return true
-      }
-    },
-    seenAllNotify: {
-      query: '/notification/seen-all',
-      argFormat: {},
-      argMap: {},
-      serverAddr: Define.constants.serverNotifyAddr,
-      showLoading: false,
-      apiVersion: Define.constants.apiVersion,
-      limitProcess: 1,
-      onArg: (arg, getState) => {
-        return {
-          ...arg,
-          memberToken: _.get(getState(), 'User.memberInfo.member.memberToken', '')
-        }
-      },
-      onError: undefined, // (dispatch,getState,data)=>{return true},
-      onDone: (dispatch, getState, data) => {
-        return true
-      }
-    },
-    countNotify: {
-      query: '/notification/count',
-      argFormat: {},
-      argMap: {},
-      serverAddr: Define.constants.serverNotifyAddr,
-      showLoading: false,
-      apiVersion: Define.constants.apiVersion,
-      limitProcess: 1,
-      onArg: (arg, getState) => {
-        return {
-          ...arg,
-          memberToken: _.get(getState(), 'User.memberInfo.member.memberToken', '')
+          token: _.get(getState(), 'User.memberInfo.token', '')
         }
       },
       onError: undefined, // (dispatch,getState,data)=>{return true},
@@ -91,7 +53,7 @@ class NotificationsActions_MiddleWare extends RDActions_MiddleWare {
       onArg: (arg, getState) => {
         return {
           ...arg,
-          memberToken: _.get(getState(), 'User.memberInfo.member.memberToken', '')
+          token: _.get(getState(), 'User.memberInfo.token', '')
         }
       },
       onError: undefined, // (dispatch,getState,data)=>{return true},

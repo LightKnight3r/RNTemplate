@@ -12,10 +12,11 @@ import {
   Modal,
   Platform,
   PermissionsAndroid,
-  Alert,
+  Keyboard,
   TouchableOpacity,
   StatusBar,
-  AppState
+  AppState,
+  SafeAreaView
 } from 'react-native';
 
 var {Actions} = require('react-native-router-flux');
@@ -76,30 +77,23 @@ class LoginScreen extends Screen{
     super(props);
     this.translate = I18n.t(props.navigator.currentScreen.name);
     this.state = _.merge(this.state,
-    {})
-    this.handleNavigateScreen = this.handleNavigateScreen.bind(this);
+    {
+      showChooseLanguage : 0,
+      language: '',
+      bottom: 0,
+      username: '',
+      password: ''
+    })
+    this.keyboardWillShow = this.keyboardWillShow.bind(this)
+    this.keyboardWillHide = this.keyboardWillHide.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
+
+    this.listLanguage = [
+      {name: this.translate.textVi, code: 'vi'},
+      {name: this.translate.textEn, code: 'en'},
+      {name: this.translate.textZh, code: 'zh'}
+    ]
   }
-  // static renderRightButton(scene){
-  //   return (
-  //     <View style={Themes.current.screen.rightButtonWrapNavBar}>
-  //       <Include.Text>RightButton</Include.Text>
-  //     </View>
-  //   )
-  // }
-  // static renderLeftButton(scene){
-  //   return (
-  //     <View style={Themes.current.screen.leftButtonWrapNavBar}>
-  //       <Include.Text>LeftButton</Include.Text>
-  //     </View>
-  //   )
-  // }
-  // static renderTitle(scene){
-  //   return(
-  //     <View style={Themes.current.screen.titleWrapNavBarCenter}>
-  //       <Include.Text style={Themes.current.text.navBartitle}>title</Include.Text>
-  //     </View>
-  //   )
-  // }
 
   onRefresh(){
     super.onRefresh();
@@ -111,8 +105,31 @@ class LoginScreen extends Screen{
     var {dispatch} = this.props;
   }
 
+  keyboardWillShow(e) {
+    const heightKeyboard = e.endCoordinates.height;
+    if (Platform.OS === 'ios') {
+      this.setState({
+        bottom: heightKeyboard
+      })
+    }
+  }
 
-
+  keyboardWillHide(e) {
+    if (Platform.OS === 'ios') {
+      this.setState({
+        bottom: 0
+      })
+    }
+  }
+  handleSubmit(){
+    this.props.dispatch(UserActions_MiddleWare.login({username: this.state.username.toLowerCase(), password: this.state.password}))
+    .then(res=>{
+      this.handleAfterLogin()
+    })
+    .catch(err=>{
+      Actions.pop()
+    })
+  }
   renderAutoLogin() {
     let content = null;
 
@@ -142,27 +159,45 @@ class LoginScreen extends Screen{
   renderScreenContent(){
     var {dispatch, user,tips, appState, appSetting} = this.props;
     var content = null;
-
+    let languageSelected = _.find(this.listLanguage, {code: appSetting.language})
     content = (
-      <View style={{flex:1, backgroundColor:'#fff', paddingTop:Platform.OS === 'ios'?0:StatusBar.currentHeight}}>
+      <View style={{flex:1, backgroundColor:'#fff' , marginBottom: this.state.bottom}}>
+        <SafeAreaView style={{ flex: 0, backgroundColor: '#fff' }} />
         <View style={{flex:1, backgroundColor:'#fff'}}>
-          <Animatable.View
-            animation="zoomIn"
-            easing="linear"
-            duration={1500}
-            style={{
-                justifyContent:'center',
-                alignItems:'center',
-                flex: 1
-              }}>
-
-              <View style={{flex:1, alignItems:'center', justifyContent:'center', paddingTop: 20}}>
-                <Include.Image source={Define.assets.Images.logoLogin}
-                  resizeMode={'stretch'}
-                  style={{width: 70, height: 70}} />
-                <Include.Text style={{fontSize: 25, color:'#07BDA1'}}>RNTemplate</Include.Text>
-              </View>
-          </Animatable.View>
+          <View style={{position:'absolute', right: 10, height: 40, width:150, borderWidth:0.5, borderRadius: 4, top: 6, zIndex: 10, borderColor:'#E8F6F6'}}>
+            <TouchableOpacity 
+              onPress={() => { this.setState({showChooseLanguage: !this.state.showChooseLanguage}) }}
+              style={{justifyContent:'center', flex: 1, backgroundColor:'#E8F6F6'}}>
+              <Include.Text style={{marginLeft: 6}}>{appSetting.language ? languageSelected.name : this.translate.textChooseLanguage}</Include.Text>
+            </TouchableOpacity>
+          </View>
+          {this.state.showChooseLanguage ?
+          <View style={{position:'absolute', backgroundColor:'#E8F6F6', right: 10, width:150, borderWidth:0.5, borderRadius: 6, top: 56, zIndex: 10, borderColor:'#E8F6F6'}}>
+            {this.listLanguage.map(item => {
+              return(
+                <TouchableOpacity 
+                  style={{height:30, borderBottomWidth: 2, borderColor:'#fff', justifyContent:'center'}}
+                  onPress={() => {
+                    this.setState({showChooseLanguage: 0, language: item.name}) 
+                    popupActions.setRenderContentAndShow(DefaultPopup,{
+                      title: this.translate.noti,
+                      description: this.translate.desNoti,
+                      buttonTitle:'OK',
+                      onPress:() => {
+                        dispatch(RDActions.AppSetting.switchLanguage(item.code))
+                        popupActions.popPopup();
+                        setTimeout(() => {
+                          CodePush.restartApp();
+                        }, 300);
+                      }
+                    })
+                  }}>
+                  <Include.Text style={{marginLeft: 6}}>{item.name}</Include.Text>
+                </TouchableOpacity>
+              )
+            })}
+          </View>
+          :null}
           <Animatable.View
             animation="zoomIn"
             easing="linear"
@@ -174,159 +209,60 @@ class LoginScreen extends Screen{
                 paddingBottom:15
               }}>
 
-              <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
+              <View style={{flex: 1, alignItems:'center', justifyContent:'center'}}>
                 <Include.Text style={{fontSize: 32, color:'#1697B4'}}>{this.translate.greeting}</Include.Text>
                 <Include.Text style={{fontSize: 18, color:'#707070'}}>{this.translate.instruction}</Include.Text>
               </View>
           </Animatable.View>
-            <Animatable.View
-              animation="fadeIn"
-              easing="linear"
-              duration={1500}
-              style={{
-                  justifyContent:'center',
-                  alignItems:'center',
-                  flex: 1
-                }}>
-            <TouchableOpacity
-              onPress={() => {
-                if(appSetting.language !== 'en') {
-                  popupActions.setRenderContentAndShow(DefaultPopup,{
-                    title: 'Thông báo',
-                    description:'Khởi động lại để áp dụng ngôn ngữ',
-                    buttonTitle:'OK',
-                    onPress:() => {
-                      dispatch(RDActions.AppSetting.switchLanguage('en'))
-                      popupActions.popPopup();
-                      setTimeout(() => {
-                        CodePush.restartApp();
-                      }, 300);
-                    }
-                  })
-
-                }
-              }}
-              delayLongPress={4000}
-              onLongPress={()=>{
-
-              }}>
+          <View style ={{alignItems:'center', flex: 1, paddingBottom:15}}>
+            <Include.TextInput
+              style={{ backgroundColor: '#E8F6F6', fontSize: 15, height: 60, width: '80%', color: '#000', paddingLeft: 20, marginBottom: 4, borderRadius: 8}}
+              autoFocus={true}
+              placeholder= {this.translate.username}
+              textContentType= {'username'}
+              underlineColorAndroid='transparent'
+              placeholderTextColor="#bababa"
+              onChangeText={note =>
+                this.setState({ username: note })
+              }
+            />
+            <Include.TextInput
+              style={{ backgroundColor: '#E8F6F6', fontSize: 15, height: 60, width: '80%', color: '#000', paddingLeft: 20, borderRadius: 8}}
+              placeholder= {this.translate.password}
+              underlineColorAndroid='transparent'
+              secureTextEntry={true}
+              textContentType= {'password'}
+              placeholderTextColor="#bababa"
+              onChangeText={note =>
+                this.setState({ password: note })
+              }
+            />
+            <TouchableOpacity 
+              onPress={()=>{
+                Keyboard.dismiss()
+                this.handleSubmit()}}>
               <LinearGradient
                 {...Themes.current.linearConfig}
                 style={{ flexDirection:'row', borderRadius: 25, height: 50,  backgroundColor:appSetting.language === 'en' ? null : 'grey', alignItems: 'center', justifyContent: 'center', width: 280,marginTop: 20}}>
-                  <Include.Image source={Define.assets.Images.phoneLogin}
+                <Include.Image source={Define.assets.Images.phoneLogin}
                   resizeMode={'stretch'}
                   style={{width: 40, height: 40, marginLeft:5}} />
                   <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
                     <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
-                      {this.translate.textEn}
+                      {this.translate.login}
                     </Include.Text>
                   </View>
               </LinearGradient>
             </TouchableOpacity>
-          </Animatable.View>
-            <Animatable.View
-              animation="fadeIn"
-              easing="linear"
-              duration={1500}
-              style={{
-                  justifyContent:'center',
-                  alignItems:'center',
-                  flex: 1
-                }}>
-            <TouchableOpacity
-              onPress={() => {
-                if(appSetting.language !== 'vi') {
-                  popupActions.setRenderContentAndShow(DefaultPopup,{
-                    title: 'Alert',
-                    description:'Reload to apply language',
-                    buttonTitle:'OK',
-                    onPress:() => {
-                      dispatch(RDActions.AppSetting.switchLanguage('vi'))
-                      popupActions.popPopup();
-                      setTimeout(() => {
-                        CodePush.restartApp();
-                      }, 300);
-                    }
-                  })
-                }
-              }}
-              delayLongPress={4000}
-              onLongPress={()=>{
-
-              }}>
-              <LinearGradient
-                {...Themes.current.linearConfig}
-                style={{ flexDirection:'row', backgroundColor:appSetting.language === 'vi' ? null : 'grey', borderRadius: 25, height: 50, alignItems: 'center', justifyContent: 'center', width: 280,marginTop: 20}}>
-                  <Include.Image source={Define.assets.Images.phoneLogin}
-                  resizeMode={'stretch'}
-                  style={{width: 40, height: 40, marginLeft:5}} />
-                  <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                    <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
-                      {this.translate.textVi}
-                    </Include.Text>
-                  </View>
-              </LinearGradient>
-            </TouchableOpacity>
-          </Animatable.View>
-            <Animatable.View
-              animation="fadeIn"
-              easing="linear"
-              duration={1500}
-              style={{
-                  justifyContent:'center',
-                  alignItems:'center',
-                  flex: 1
-                }}>
-            <TouchableOpacity
-              onPress={() => {
-                if(appSetting.language !== 'zh') {
-                  popupActions.setRenderContentAndShow(DefaultPopup,{
-                    title: '警报',
-                    description:'重新加载以应用语言',
-                    buttonTitle:'好',
-                    onPress:() => {
-                      dispatch(RDActions.AppSetting.switchLanguage('zh'))
-                      popupActions.popPopup();
-                      setTimeout(() => {
-                        CodePush.restartApp();
-                      }, 300);
-                    }
-                  })
-                }
-              }}
-              delayLongPress={4000}
-              onLongPress={()=>{
-
-              }}>
-              <LinearGradient
-                {...Themes.current.linearConfig}
-                style={{ flexDirection:'row', backgroundColor:appSetting.language === 'vi' ? null : 'grey', borderRadius: 25, height: 50, alignItems: 'center', justifyContent: 'center', width: 280,marginTop: 20}}>
-                  <Include.Image source={Define.assets.Images.phoneLogin}
-                  resizeMode={'stretch'}
-                  style={{width: 40, height: 40, marginLeft:5}} />
-                  <View style={{flex:1, alignItems:'center', justifyContent:'center'}}>
-                    <Include.Text style={{color: '#fff', fontSize:16, backgroundColor:'transparent'}}>
-                      {this.translate.textZh}
-                    </Include.Text>
-                  </View>
-              </LinearGradient>
-            </TouchableOpacity>
-          </Animatable.View>
+          </View>
         </View>
-        <View>
-          <Include.Image source={Define.assets.Images.imageLogin}
-            resizeMode={'stretch'}
-            style={{width: Define.constants.widthScreen, height: Define.constants.widthScreen/3.46, alignSelf:'center'}} />
-        </View>
-
         {this.renderAutoLogin()}
       </View>
     );
     return content;
   }
 
-
-  handleNavigateScreen(info,needTurnOnLocation) {
+  handleAfterLogin(info) {
     const {appSetting, dispatch, user} = this.props;
     if (!info || !info?.res) {
       const inf = {
@@ -334,17 +270,13 @@ class LoginScreen extends Screen{
       };
       info = inf;
     }
-    let screenName = 'SwitchModeScreen';
+    let screenName = 'HomeScreen';
     let optionsScene = {
       type: 'reset'
     };
 
-    if(!info?.res?.member?.facebook?.name) {
-      screenName = 'PolicyScreen';
-    } else if(appSetting.mode === 'shipper' && appSetting.regionNew && !needTurnOnLocation) {
-      screenName = 'FeedsScreenContainer'
-    } else if(appSetting.mode === 'shop' && appSetting.regionNew && !needTurnOnLocation) {
-      screenName = 'ServiceAvailableListContainer'
+    if(!info?.res?.data?.name) {
+      screenName = 'HomeScreen';
     }
     dispatch(RDActions['AppState']['showLoadingOnRequest']({show:false}))
     Actions[screenName](optionsScene);
@@ -363,12 +295,44 @@ class LoginScreen extends Screen{
 
   componentDidMount(){
     super.componentDidMount();
-
     StatusBar.setBarStyle('dark-content');
   }
+
+  UNSAFE_componentWillMount() {
+    super.UNSAFE_componentWillMount()
+    var {dispatch,user,appSetting} = this.props;
+    const token = _.get(user, 'memberInfo.token', '');
+    if (token) {
+      this.setState({
+        reLogin: true
+      })
+
+      dispatch(UserActions_MiddleWare.getInfo())
+      .then(this.handleAfterLogin())
+      .catch(err => {
+        this.setState({
+          reLogin: false
+        })
+      });
+    }
+    if (Platform.OS === 'android') {
+      Keyboard.addListener('keyboardDidShow', this.keyboardWillShow)
+      Keyboard.addListener('keyboardDidHide', this.keyboardWillHide)
+    } else {
+      Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
+      Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
+    }
+  }
+
   componentWillUnmount(){
     StatusBar.setBarStyle('light-content');
-
+    if (Platform.OS === 'android') {
+      Keyboard.addListener('keyboardDidShow', this.keyboardWillShow)
+      Keyboard.addListener('keyboardDidHide', this.keyboardWillHide)
+    } else {
+      Keyboard.addListener('keyboardWillShow', this.keyboardWillShow)
+      Keyboard.addListener('keyboardWillHide', this.keyboardWillHide)
+    }
     AppState.removeEventListener('change', this.handleAppStateChange);
   }
 }

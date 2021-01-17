@@ -56,7 +56,7 @@ class Settings extends Component {
       dispatch(UserActions_MiddleWare.updateProfile(objUpdate))
       .then(()=>{
         globalVariableManager.rootView.showToast('Cập nhật thông tin thành công');
-        dispatch(UserActions_MiddleWare.get())
+        dispatch(UserActions_MiddleWare.getInfo())
         .then(() => {
           if(this.forceUpdate) {
             return (

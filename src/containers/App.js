@@ -96,11 +96,16 @@ import Toast, {DURATION} from 'react-native-easy-toast'
 // screens
 import LoginScreen from '../components/screens/LoginScreen'
 import HomeScreen from '../components/screens/HomeScreen'
-
+import ProfileScreen from '../components/screens/ProfileScreen'
+import CreateStoreScreen from '../components/screens/CreateStoreScreen'
+import CreatePhoneScreen from '../components/screens/CreatePhoneScreen'
 
 var screenList=[
   LoginScreen,
-  HomeScreen
+  HomeScreen,
+  ProfileScreen,
+  CreateStoreScreen,
+  CreatePhoneScreen,
 ];
 //popups
 import DefaultPopup from '../components/popups/DefaultPopup'
@@ -162,16 +167,13 @@ var App = createReactClass({
   getRegion: function() {
     return new Promise((resolve, reject) => {
       const {dispatch, appSetting, user} = this.props;
-      const memberToken = _.get(user, 'memberInfo.member.memberToken', '');
+      const memberToken = _.get(user, 'memberInfo.token', '');
       if(!appSetting.mode || !appSetting.regionNew || !memberToken || Date.now() - appSetting.lastTimeGetRegion <= 300000) {
         return resolve();
       }
 
       locationManager
         .getCurrentLocation()
-        .then((location) => {
-          return dispatch(UserActions_MiddleWare.getRegionByLatLng({location}))
-        })
         .then((res) => {
           resolve();
         })
@@ -183,8 +185,8 @@ var App = createReactClass({
   getUser: function() {
     const {user, dispatch} = this.props;
 
-    if(user.memberInfo.member) {
-      dispatch(UserActions_MiddleWare.get())
+    if(user.memberInfo) {
+      dispatch(UserActions_MiddleWare.getInfo())
     }
   },
   handleAppStateChange:function(currentAppState){
@@ -201,11 +203,6 @@ var App = createReactClass({
         }
 
         this.getRegion()
-        this.getConfig()
-        .then(() => {
-          this.getConfigReview();
-          this.getUser();
-        })
         break;
       }
       case 'background':{
@@ -232,20 +229,6 @@ var App = createReactClass({
   defaultRightButton() {
     return (
       <View style={Themes.current.screen.rightButtonWrapNavBar}>
-        {/* <ButtonWrap onPress={()=>{
-          Actions.NotifyScreen({
-            type: 'push'
-          })
-        }}>
-          <Icon name='ios-notifications' style={{fontSize: 27, lineHeight: 36, color: '#fff'}} />
-          {this.props.notify.list.length > 0 ?
-            <View
-              pointerEvents={'none'}
-              style={{position: 'absolute', top: Platform.OS === 'ios' ? 0 : StatusBar.currentHeight, right: -5, width: 15, height: 15, borderRadius: 7.5, backgroundColor: '#e74c3c', alignItems: 'center', justifyContent: 'center'}}>
-                <Include.Text numberOfLines={1} style={{color: '#fff', backgroundColor: 'transparent'}}>{this.props.notify.list.length}</Include.Text>
-            </View>
-          : null}
-        </ButtonWrap> */}
       </View>
     )
   },
@@ -478,7 +461,7 @@ var App = createReactClass({
     const {dispatch, user} = this.props;
     Define.config.token = token;
     Define.config.waitToken = false;
-    const memberToken = _.get(user, 'memberInfo.member.memberToken', '');
+    const memberToken = _.get(user, 'memberInfo.token', '');
     if(memberToken) {
       dispatch(UserActions_MiddleWare.sentNotifyToken({memberToken: memberToken}));
     }
@@ -596,132 +579,6 @@ var App = createReactClass({
     }
 
     if(Platform.OS === 'android') {
-      // RNHotUpdate.getVersion()
-      //   .then((arg)=>{
-      //     Define.constants.currentHybridVersion = arg.currentHybridVersion;
-      //     Debug.log(Define.config.currentHybridVersion);
-      //   })
-        // fcm
-      //Debug.log2('GcmAndroid.module.fcmToken : ',GcmAndroid.module.fcmToken)
-      // console.log('GcmAndroid.module.fcmToken : ',GcmAndroid.module.fcmToken)
-    //  Define.config.token = GcmAndroid.module.fcmToken;
-      Define.config.waitToken = false;
-
-      const memberToken = _.get(user, 'memberInfo.member.memberToken', '');
-      if(memberToken) {
-        dispatch(UserActions_MiddleWare.sentNotifyToken({memberToken: memberToken}));
-      }
-      // GcmAndroid.removeEventListener('notification');
-      // GcmAndroid.addEventListener('notification', function(notification){
-      //   Debug.log2('GCM receive notification', notification);
-      //
-      //   // GcmAndroid.applyBadgeCount(1);
-      //   Vibration.vibrate([0, 500, 500]);
-      //   var notifyFormat={
-      //     _id:'',
-      //     title:'',
-      //     bigImgage:'',
-      //     description:'',
-      //     link:'',
-      //     extras:{},
-      //     createAt:0,
-      //     expiredAt:0,
-      //   }
-      //   if (notification && notification.data && notification.data.title) {
-      //
-      //
-      //     ToastAndroid.show('Thông báo: ' + notification.data.title , ToastAndroid.LONG);
-      //     try{
-      //       notification.data.extras = JSON.parse(notification.data.extras);
-      //     }catch(ex){};
-      //
-      //     var temp = Util.dataProtectAndMap(notification.data, notifyFormat);
-      //
-      //     if (temp.link === 'OrderCreatedScreen') {
-      //       temp.link = 'ServiceAvailableListContainer';
-      //       temp.extras = {
-      //         orderCreatedScreen: {
-      //           ...temp.extras,
-      //           time: Date.now()
-      //         },
-      //         serviceId: Define.constants.serviceOrderSystem[0],
-      //         tabFocus: 1
-      //       }
-      //     }
-      //
-      //     if (temp.link === 'OrderSystemScreen') {
-      //       temp.link = 'OrderSystemContainer';
-      //       temp.extras = {
-      //         orderSystemScreen: {
-      //           ...temp.extras,
-      //           time: Date.now()
-      //         },
-      //         time: Date.now(),
-      //         serviceId: Define.constants.serviceOrderSystem[0]
-      //       }
-      //     }
-      //
-      //     if (temp.link==="WebRTC") {
-      //       self.webRTCAppear = true;
-      //       popupActions.setRenderContentAndShow(WebRTC, {
-      //         roomId: temp.extras.roomId,
-      //         userId: temp.extras.userId
-      //       });
-      //     }else {
-      //       Notification.create({
-      //         id: temp._id,
-      //         subject: temp.title,
-      //         message: temp.description,
-      //         bigText : temp.description,
-      //         smallIcon: 'ic_launcher',
-      //         bigStyleUrlImgage :temp.bigImgage ? temp.bigImgage:undefined,
-      //         autoClear: true,
-      //         category : 'event',
-      //         // sound :'default',
-      //         sound:'default',
-      //         vibrate :'default',
-      //         lights :'default',
-      //         payload: {
-      //           time:Date.now(),
-      //           deepLink:temp.link,
-      //           extras:temp.extras,
-      //         }
-      //       });
-      //     }
-      //
-      //
-      //     if (temp.link !== 'WebRTC') {
-      //       temp.notifiedAt = Date.now()
-      //       dispatch(RDActions['Notify']['addOnRequest'](temp));
-      //     }
-      //
-      //     self.fetchDataFromNotify(notification.data);
-      //   }
-      // });
-
-      // Notification.addListener('press', function(e) {
-      //   Debug.log('Notification:press',Debug.level.USER_TRACKER);
-      //   if (self.processDeepLinkFromNotifyDone) {
-      //     globalVariableManager.navigatorManager.handleNavigator(e.payload.deepLink,e.payload.extras);
-      //     let _idSellect = -1;
-      //     for (let i = 0; i < globalVariableManager.reduxManager.state.Notify.list.length; i++) {
-      //       if(globalVariableManager.reduxManager.state.Notify.list[i].notifiedAt === e.payload.time) {
-      //         _idSellect = globalVariableManager.reduxManager.state.Notify.list[i]._id;
-      //         break;
-      //       }
-      //     }
-      //
-      //     if(_idSellect !== -1) {
-      //         dispatch(RDActions['Notify']['removeOnRequest']({id:_idSellect}));
-      //     }
-      //   }
-      //   else{
-      //     self.startDeepLink = e.payload.deepLink;
-      //     self.startExtras = e.payload.extras;
-      //   }
-      //
-      // });
-      // update task
       DeviceEventEmitter.addListener('HotUpdateManager:checkUpdate', (ev) => {
         Debug.log2('HotUpdateManager:checkUpdate', ev,Debug.level.USER_TRACKER);
       });
@@ -823,7 +680,6 @@ var App = createReactClass({
 
         DeviceEventEmitter.addListener('hardwareMenuPress', ()=>{
           if(globalVariableManager.reduxManager.state.Navigator.currentScreen.name !== 'LoginScreen' &&
-              globalVariableManager.reduxManager.state.Navigator.currentScreen.name !== 'LoginByPhoneScreen' &&
               globalVariableManager.reduxManager.state.Navigator.currentScreen.name !== 'PhoneAuthenticationScreen' &&
               globalVariableManager.reduxManager.state.Navigator.currentScreen.name !== 'PolicyScreen' &&
               globalVariableManager.reduxManager.state.Navigator.currentScreen.name !== 'TutorialScreen'){
@@ -836,7 +692,7 @@ var App = createReactClass({
       PushNotificationIOS.addEventListener('register', token => {
         Define.config.token = token;
         Define.config.waitToken = false;
-        const memberToken = _.get(user, 'memberInfo.member.memberToken', '');
+        const memberToken = _.get(user, 'memberInfo.token', '');
         if(memberToken) {
           dispatch(UserActions_MiddleWare.sentNotifyToken({memberToken: memberToken}));
         }
@@ -891,7 +747,6 @@ var App = createReactClass({
     || currentSceneName === 'SwitchModeScreen'
     || currentSceneName === 'InstantOrderScreen'
     || currentSceneName === 'PhoneAuthenticationScreen'
-    || currentSceneName === 'LoginByPhoneScreen'
     || appState.instantMode
   ) {
       return true;

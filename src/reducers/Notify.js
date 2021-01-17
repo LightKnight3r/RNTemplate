@@ -53,46 +53,7 @@ function Notify(state ={
                 })
       break;
     }
-    case RDActionsTypes.Notify.remove: {
-      stateTemp = RDUtil.processReducerLoading(state,action,'remove',
-                {
-                  onRequest: (stateTempIn) => {
-                    const id = action.data.id;
-                    if(_.get(globalVariableManager.reduxManager.state.AppSetting, 'mode', '') === 'shop'){
-                      const index = _.findIndex(stateTempIn.lists.shop, (element) => {
-                        return element._id === id
-                      })
-                      if(index !== -1) {
-                        stateTempIn.lists.shop.splice(index, 1);
-                      }
-                    } else{
-                      const index = _.findIndex(stateTempIn.lists.ship, (element) => {
-                        return element._id === id
-                      })
-                      if(index !== -1) {
-                        stateTempIn.lists.ship.splice(index, 1);
-                      }
-                    }
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
-    case RDActionsTypes.Notify.removeAllNotify: {
-      stateTemp = RDUtil.processReducerLoading(state,action,'removeAllNotify',
-                {
-                  onRequest: (stateTempIn) => {
-                    if(_.get(globalVariableManager.reduxManager.state.AppSetting, 'mode', '') === 'shop'){
-                      stateTempIn.lists.shop = [];
-                    } else{
-                      stateTempIn.lists.ship = [];
-                    }
 
-                    return stateTempIn;
-                  }
-                })
-      break;
-    }
     default:
       // Debug.log('ServerConnection:unknown type:'+action.type);
       break;

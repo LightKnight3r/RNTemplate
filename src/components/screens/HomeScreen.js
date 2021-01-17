@@ -8,7 +8,9 @@ import {
   ScrollView,
   RefreshControl,
   SafeAreaView,
+  TouchableOpacity
 } from 'react-native';
+import { Icon } from 'native-base';
 
 var {Actions} = require('react-native-router-flux');
 import { connect } from 'react-redux';
@@ -20,6 +22,7 @@ var Debug = require('../../Util/Debug');
 var Themes = require('../../Themes');
 var Util = require('../../Util/Util');
 var Include = require('../../Include');
+import UserActions_MiddleWare from '../../actions/UserActions_MiddleWare'
 
 var I18n = require('../../Util/i18n');
 
@@ -54,17 +57,27 @@ class HomeScreen extends Screen{
   // static propTypes = {}
   constructor(props){
     super(props);
+    // this.translate = I18n.t("HomeScreen");
     this.state = _.merge(this.state,
     {})
   }
 
-  // static renderLeftButton(scene){
-  //   return (
-  //     <View style={Themes.current.screen.leftButtonWrapNavBar}>
-  //       <Include.Text>LeftButton</Include.Text>
-  //     </View>
-  //   )
-  // }
+  static renderLeftButton(scene){
+    return (
+      <View style={Themes.current.screen.leftButtonWrapNavBar}>
+        <TouchableOpacity
+          key={'_menu'}
+          style={{width: 50}}
+          // ref={(ref) => {this.props.setRefsForHint?this.props.setRefsForHint('_menu',ref):null}}
+          onPress={()=>{globalVariableManager.rootView.drawSideMenu(true)}}>
+          <View
+            style={{backgroundColor: 'transparent',top:Platform.OS === 'android' ? 7 : 0,left:0,paddingLeft: 10, paddingRight:10,height:Define.constants.navBarHeight,flexDirection:'row',alignItems:'center',justifyContent:'flex-start',}}>
+            <Icon name='ios-menu' style={{fontSize: 32, lineHeight: 36, color: '#fff'}} />
+          </View>
+        </TouchableOpacity>
+      </View>
+    )
+  }
   // static renderRightButton(scene){
   //   return (
   //     <View style={Themes.current.screen.rightButtonWrapNavBar}>
@@ -72,19 +85,25 @@ class HomeScreen extends Screen{
   //     </View>
   //   )
   // }
-  static renderTitle(scene){
-    return(
-      <View style={Themes.current.screen.titleWrapNavBarCenter}>
-        <Include.Text style={Themes.current.text.navBartitle}>HomeScreen</Include.Text>
-      </View>
-    )
-  }
+  // static renderTitle(scene){
+  //   return(
+  //     <View style={Themes.current.screen.titleWrapNavBarCenter}>
+  //       <Include.Text style={Themes.current.text.navBartitle}>HomeScreen</Include.Text>
+  //     </View>
+  //   )
+  // }
 
   onRefresh(){
     super.onRefresh();
     var {dispatch} = this.props;
   }
-
+  hangle(){
+    this.props.dispatch(UserActions_MiddleWare.logout())
+    .then(res=>{
+    })
+    .catch(err=>{
+    })
+  }
   onGetMore(){
     super.onGetMore();
     var {dispatch} = this.props;
@@ -102,6 +121,9 @@ class HomeScreen extends Screen{
           onGetMore={this.onGetMore}
         >
           <Include.Text>Content</Include.Text>
+          <TouchableOpacity onPress={()=>{this.hangle()}}>
+            <Include.Text>haha</Include.Text>
+          </TouchableOpacity>
         </Include.ScrollView>
         <SafeAreaView style={{flex: 0, backgroundColor: '#fff'}} />
       </View>
@@ -122,6 +144,7 @@ class HomeScreen extends Screen{
 function selectActions(state) {
   return {
     navigator: state.Navigator,
+    user: state.User,
   }
 }
 

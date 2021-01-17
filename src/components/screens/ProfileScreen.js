@@ -43,8 +43,8 @@ import DefaultPopup from '../popups/DefaultPopup';
 
 //
 
-class TemplateScreen extends Screen{
-  static componentName = 'TemplateScreen'
+class ProfileScreen extends Screen{
+  static componentName = 'ProfileScreen'
   static sceneConfig ={
     ...Screen.sceneConfig
   }
@@ -71,13 +71,13 @@ class TemplateScreen extends Screen{
   //     </View>
   //   )
   // }
-  // static renderTitle(scene){
-  //   return(
-  //     <View style={Themes.current.screen.titleWrapNavBarCenter}>
-  //       <Include.Text style={Themes.current.text.navBartitle}>title</Include.Text>
-  //     </View>
-  //   )
-  // }
+  static renderTitle(scene){
+    return(
+      <View style={Themes.current.screen.titleWrapNavBarCenter}>
+        <Include.Text style={Themes.current.text.navBartitle}>PROFILE SCREEN</Include.Text>
+      </View>
+    )
+  }
 
   onRefresh(){
     super.onRefresh();
@@ -124,4 +124,4 @@ function selectActions(state) {
   }
 }
 
-export default connect(selectActions, undefined, undefined, {withRef: true})(TemplateScreen);
+export default connect(selectActions, undefined, undefined, {withRef: true})(ProfileScreen);

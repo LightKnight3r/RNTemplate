@@ -27,10 +27,6 @@ const configFormat = {
   loginByFacebook: {
     status: 0
   },
-  loginByPhone: {
-    status: true,
-    type: 'facebook'
-  },
   undermaintain: {
     status: false,
     message: 'Hệ thống đang bảo trì bạn vui lòng thử lại sau'
@@ -52,24 +48,10 @@ const configFormat = {
 function AppState(state ={
                   ...initLoading(),
                   showLoading: false,
-                  configForUpdateLocation: {
-                    interval: 20000,
-                    options: {
-                      enableHighAccuracy: true,
-                      timeout: 20000
-                    },
-                    url: "https://location.heyu.asia/api/v2.0/member/update-latest-location"
-                  },
                   isReview: true,
-                  showMountService: 0,
-                  serviceName: '',
                   config: {
                     loginByFacebook: {
                       status: 0
-                    },
-                    loginByPhone: {
-                      status: false,
-                      type: 'facebook'
                     },
                     undermaintain: {
                       status: false ,
@@ -82,21 +64,6 @@ function AppState(state ={
                     networkError: false,
                     systemError: false,
                   },
-                  instantMode: false,
-                  contactInfo: {
-                    address: {
-                      location: {
-                        lat: 20.989092,
-                        lng: 105.84447
-                      },
-                      name: "Số 69 Ngõ 35 Nguyễn An Ninh, Hoàng Mai, Hà Nội"
-                    },
-                    message: "",
-                    hotline: "1900633689"
-                  },
-                  listService: [],
-                  openHistoryFacebook: 1,
-                  tags: {},
   currentState:RDActionsTypes.AppState.constants.APP_STATE_LIST.LOADING,
   currentDirect: (widthScreen < heightScreen)?
                       RDActionsTypes.AppState.constants.APP_STATE_DIRECT_LIST.PORTRAIT:
@@ -144,93 +111,6 @@ function AppState(state ={
                     return stateTempIn;
                   }
                 })
-
-      break;
-    }
-    
-    case RDActionsTypes.AppState.getConfigForUpdateLocation:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'getConfigForUpdateLocation',
-        {
-          onSuccess:(stateTempIn)=>{
-            stateTempIn.configForUpdateLocation = action.data.res.data;
-            return stateTempIn;
-          }
-        })
-
-      break
-    }
-    case RDActionsTypes.AppState.setInstanceMode:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'setInstanceMode',
-        {
-          onRequest:(stateTempIn)=>{
-            stateTempIn.instantMode = action.data;
-            return stateTempIn;
-          }
-        })
-
-      break;
-    }
-    case RDActionsTypes.AppState.getContact:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'getContact',
-        {
-          onSuccess:(stateTempIn)=>{
-            if(action.data.res.data) {
-              stateTempIn.contactInfo = action.data.res.data
-            }
-            return stateTempIn;
-          }
-        })
-
-      break;
-    }
-    case RDActionsTypes.AppState.getConfigForMount:{
-      stateTemp = RDUtil.processReducerLoading(state,action,'getConfigForMount',
-        {
-          onSuccess:(stateTempIn)=>{
-            if(action.data.res.data) {
-              stateTempIn.mountMethod = action.data.res.data && action.data.res.data.method ? action.data.res.data.method: 'inapp',
-              stateTempIn.showMountService = action.data.res.data && action.data.res.data.isOpen ? action.data.res.data.isOpen: 0,
-              stateTempIn.serviceName = action.data.res.data && action.data.res.data.serviceName ? action.data.res.data.serviceName: ''
-            }
-            return stateTempIn;
-          }
-        })
-
-      break;
-    }
-    case RDActionsTypes.AppState.listServiceAvailable: {
-      stateTemp = RDUtil.processReducerLoading(state, action, 'listServiceAvailable',
-        {
-          onSuccess: (stateTempIn) => {
-            stateTempIn.listService = action.data.res.data || [];
-
-            return stateTempIn;
-          }
-        })
-
-      break;
-    }
-    case RDActionsTypes.AppState.getConfigHistoryFacebook: {
-      stateTemp = RDUtil.processReducerLoading(state, action, 'getConfigHistoryFacebook',
-        {
-          onSuccess: (stateTempIn) => {
-            stateTempIn.openHistoryFacebook = action.data.res.data.isOpen;
-
-            return stateTempIn;
-          }
-        })
-
-      break
-    }
-    case RDActionsTypes.AppState.getConfigForTag: {
-      stateTemp = RDUtil.processReducerLoading(state, action, 'getConfigForTag',
-        {
-          onSuccess: (stateTempIn) => {
-            stateTempIn.tags = action.data.res.data || {};
-
-            return stateTempIn;
-          }
-        })
 
       break;
     }
